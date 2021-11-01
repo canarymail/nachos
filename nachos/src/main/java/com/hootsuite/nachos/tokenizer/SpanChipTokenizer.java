@@ -6,9 +6,7 @@ import android.support.annotation.Nullable;
 import android.text.Editable;
 import android.text.SpannableString;
 import android.text.Spanned;
-import android.util.Log;
 import android.util.Pair;
-
 import com.hootsuite.nachos.ChipConfiguration;
 import com.hootsuite.nachos.chip.Chip;
 import com.hootsuite.nachos.chip.ChipCreator;
@@ -22,7 +20,7 @@ import java.util.List;
 
 /**
  * A default implementation of {@link ChipTokenizer}.
- *     This implementation does the following:
+ * This implementation does the following:
  *     <ul>
  *         <li>Surrounds each token with a space and the Unit Separator ASCII control character (31) - See the diagram below
  *              <ul>
@@ -87,7 +85,9 @@ public class SpanChipTokenizer<C extends Chip> implements ChipTokenizer {
             // Recreate the chips with the new configuration
             int chipStart = findChipStart(chip, text);
             deleteChip(chip, text);
-            text.insert(chipStart, terminateToken(mChipCreator.createChip(mContext, chip)));
+            if (chipStart >= 0) {
+                text.insert(chipStart, terminateToken(mChipCreator.createChip(mContext, chip)));
+            }
         }
     }
 
