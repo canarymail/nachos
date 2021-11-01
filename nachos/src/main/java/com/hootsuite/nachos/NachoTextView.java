@@ -7,12 +7,7 @@ import android.content.res.ColorStateList;
 import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.support.annotation.ColorInt;
-import android.support.annotation.ColorRes;
-import android.support.annotation.DimenRes;
-import android.support.annotation.Dimension;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import android.support.annotation.*;
 import android.support.v4.content.ContextCompat;
 import android.text.Editable;
 import android.text.Layout;
@@ -25,12 +20,7 @@ import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
-import android.widget.Adapter;
-import android.widget.AdapterView;
-import android.widget.AutoCompleteTextView;
-import android.widget.ListAdapter;
-import android.widget.MultiAutoCompleteTextView;
-
+import android.widget.*;
 import com.hootsuite.nachos.chip.Chip;
 import com.hootsuite.nachos.chip.ChipInfo;
 import com.hootsuite.nachos.chip.ChipSpan;
@@ -43,31 +33,26 @@ import com.hootsuite.nachos.validator.ChipifyingNachoValidator;
 import com.hootsuite.nachos.validator.IllegalCharacterIdentifier;
 import com.hootsuite.nachos.validator.NachoValidator;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * An editable TextView extending {@link MultiAutoCompleteTextView} that supports "chipifying" pieces of text and displaying suggestions for segments of the text.
  * <h1>The ChipTokenizer</h1>
- *     To customize chipifying with this class you can provide a custom {@link ChipTokenizer} by calling {@link #setChipTokenizer(ChipTokenizer)}.
- *     By default the {@link SpanChipTokenizer} is used.
+ * To customize chipifying with this class you can provide a custom {@link ChipTokenizer} by calling {@link #setChipTokenizer(ChipTokenizer)}.
+ * By default the {@link SpanChipTokenizer} is used.
  * <h1>Chip Terminators</h1>
- *     To set which characters trigger the creation of a chip, call {@link #addChipTerminator(char, int)} or {@link #setChipTerminators(Map)}.
- *     For example if tapping enter should cause all unchipped text to become chipped, call
- *     {@code chipSuggestionTextView.addChipTerminator('\n', ChipTerminatorHandler.BEHAVIOR_CHIPIFY_ALL);}
- *     To completely customize how chips are created when text is entered in this text view you can provide a custom {@link ChipTerminatorHandler}
- *     through {@link #setChipTerminatorHandler(ChipTerminatorHandler)}
+ * To set which characters trigger the creation of a chip, call {@link #addChipTerminator(char, int)} or {@link #setChipTerminators(Map)}.
+ * For example if tapping enter should cause all unchipped text to become chipped, call
+ * {@code chipSuggestionTextView.addChipTerminator('\n', ChipTerminatorHandler.BEHAVIOR_CHIPIFY_ALL);}
+ * To completely customize how chips are created when text is entered in this text view you can provide a custom {@link ChipTerminatorHandler}
+ * through {@link #setChipTerminatorHandler(ChipTerminatorHandler)}
  * <h1>Illegal Characters</h1>
- *     To prevent a character from being typed you can call {@link #setIllegalCharacterIdentifier(IllegalCharacterIdentifier)}} to identify characters
- *     that should be considered illegal.
+ * To prevent a character from being typed you can call {@link #setIllegalCharacterIdentifier(IllegalCharacterIdentifier)}} to identify characters
+ * that should be considered illegal.
  * <h1>Suggestions</h1>
- *     To provide suggestions you must provide an {@link android.widget.Adapter} by calling {@link #setAdapter(ListAdapter)}
+ * To provide suggestions you must provide an {@link android.widget.Adapter} by calling {@link #setAdapter(ListAdapter)}
  * <h1>UI Customization</h1>
- *     This view defines six custom attributes (all of which are optional):
+ * This view defines six custom attributes (all of which are optional):
  *     <ul>
  *         <li>chipHorizontalSpacing - the horizontal space between chips</li>
  *         <li>chipBackground - the background color of the chip</li>
@@ -488,9 +473,9 @@ public class NachoTextView extends MultiAutoCompleteTextView implements TextWatc
      * Enables editing chips on touch events. When a touch event occurs, the touched chip will be put in editing mode. To later disable this behavior
      * call {@link #disableEditChipOnTouch()}.
      * <p>
-     *     Note: If an {@link OnChipClickListener} is set it's behavior will override the behavior described here if it's
-     *     {@link OnChipClickListener#onChipClick(Chip, MotionEvent)} method returns true. If that method returns false, the touched chip will be put
-     *     in editing mode as expected.
+     * Note: If an {@link OnChipClickListener} is set it's behavior will override the behavior described here if it's
+     * {@link OnChipClickListener#onChipClick(Chip, MotionEvent)} method returns true. If that method returns false, the touched chip will be put
+     * in editing mode as expected.
      * </p>
      *
      * @param moveChipToEnd             if true, the chip will also be moved to the end of the text when it is put in editing mode
@@ -793,6 +778,12 @@ public class NachoTextView extends MultiAutoCompleteTextView implements TextWatc
         if (end < start) {
             end = start;
         }
+
+        // guard against java.lang.StringIndexOutOfBoundsException
+        start = Math.min(Math.max(0, start), editable.length());
+        end = Math.min(Math.max(0, end), editable.length());
+        if (end < start)
+            end = start;
 
         editable.replace(start, end, mChipTokenizer.terminateToken(text, data));
 
@@ -1111,7 +1102,7 @@ public class NachoTextView extends MultiAutoCompleteTextView implements TextWatc
         /**
          * Called when a chip in this TextView is removed
          *
-         * @param chip  the {@link Chip} that was removed
+         * @param chip the {@link Chip} that was removed
          */
         void onChipRemove(Chip chip);
     }
