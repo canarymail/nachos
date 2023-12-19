@@ -980,7 +980,9 @@ public class NachoTextView extends MultiAutoCompleteTextView implements TextWatc
                 String chipText = chip.getText().toString();
                 int chipStart = mChipTokenizer.findChipStart(chip, editable) - start;
                 int chipEnd = mChipTokenizer.findChipEnd(chip, editable) - start;
-                selectedText = selectedText.substring(0, chipStart) + chipText + selectedText.substring(chipEnd, selectedText.length());
+                if (chipStart > 0 && chipEnd > 0) {
+                    selectedText = selectedText.substring(0, chipStart) + chipText + selectedText.substring(chipEnd, selectedText.length());
+                }
             }
         }
         return selectedText;
